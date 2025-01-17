@@ -83,10 +83,13 @@ pub mod ethabi {
 
     impl<Extra: AsTuple> Decode<EthAbi> for ClientState<Extra>
     where
-        ClientStateFieldsTuple:
-            Join<Extra::Tuple, Out:
-            From<<<<ClientStateFieldsTuple as Join<Extra::Tuple>>::Out as SolValue>::SolType as SolType>::RustType> +
-            SolValue<SolType: for<'a> SolType<Token<'a>: TokenSeq<'a>>>>,
+        ClientStateFieldsTuple: Join<
+            Extra::Tuple,
+            Out: From<
+                    <<<ClientStateFieldsTuple as Join<Extra::Tuple>>::Out as SolValue>::SolType as SolType>::RustType
+                >
+                + SolValue<SolType: for<'a> SolType<Token<'a>: TokenSeq<'a>>>
+        >,
     {
         type Error = alloy::sol_types::Error;
 
@@ -109,7 +112,7 @@ pub mod ethabi {
                 l1_client_id,
                 l2_client_id,
                 l2_latest_height,
-                extra: Extra::from_tuple(extra) 
+                extra: Extra::from_tuple(extra)
              })
         }
     }
@@ -121,7 +124,7 @@ mod tests {
     use unionlabs::{
         encoding::{Bincode, DecodeAs, EncodeAs, EthAbi, Json},
         test_utils::assert_codec_iso,
-        tuple::{AsTuple, Tuple},
+        tuple::AsTuple,
     };
 
     use super::*;
